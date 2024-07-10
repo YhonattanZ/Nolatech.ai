@@ -6,6 +6,9 @@ class LoginProvider extends ChangeNotifier {
   bool showPassword = false;
   bool isChecked = false;
 
+  TextEditingController emailCtrl = TextEditingController();
+  TextEditingController passwordCtrl = TextEditingController();
+
   void goToRegister(context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const Register()));

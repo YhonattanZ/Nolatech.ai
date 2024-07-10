@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 class CustomHttpProvider {
@@ -42,11 +43,9 @@ class CustomHttpProvider {
 
   void _logStatusCode(http.Response response) {
     if (response.statusCode == 200) {
-      print(
-          'Request to ${response.request?.url} was successful with status code: ${response.statusCode}');
+      log('Request to ${response.request?.url} was successful with status code: ${response.statusCode}');
     } else {
-      print(
-          'Request to ${response.request?.url} failed with status code: ${response.statusCode}');
+      log('Request to ${response.request?.url} failed with status code: ${response.statusCode}');
     }
   }
 }
