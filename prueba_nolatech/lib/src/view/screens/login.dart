@@ -30,7 +30,7 @@ class Login extends StatelessWidget {
                   textfields(context),
                   checkbox(),
                   const Spacer(),
-                  footer()
+                  footer(context)
                 ]),
               ),
             ],
@@ -40,7 +40,9 @@ class Login extends StatelessWidget {
     );
   }
 
-  Widget footer() {
+  Widget footer(context) {
+    final provider = Provider.of<LoginProvider>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 50.0),
       child: Column(
@@ -57,7 +59,9 @@ class Login extends StatelessWidget {
                     backgroundColor: secondaryColor,
                     shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)))),
-                onPressed: () {},
+                onPressed: () {
+                  provider.goToMainPage(context);
+                },
                 child: const Text('Inicia sesion',
                     style: TextStyle(color: Colors.white, fontSize: fontSize))),
           ),
@@ -66,7 +70,9 @@ class Login extends StatelessWidget {
             children: [
               const Text('¿Aun no tienes una cuenta?'),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    provider.goToRegister(context);
+                  },
                   child: const Text(
                     'Registrate',
                     style: TextStyle(color: secondaryColor),

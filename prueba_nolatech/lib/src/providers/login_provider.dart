@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:prueba_nolatech/src/view/screens/login.dart';
 import 'package:prueba_nolatech/src/view/screens/register.dart';
 
+import '../view/screens/main_page.dart';
+
 class LoginProvider extends ChangeNotifier {
   bool showPassword = false;
   bool isChecked = false;
@@ -17,6 +19,11 @@ class LoginProvider extends ChangeNotifier {
   void goToLogin(context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const Login()));
+  }
+
+  void goToMainPage(context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const MainPage()));
   }
 
   void isShowPassword(bool password) {
