@@ -3,6 +3,8 @@ import 'package:prueba_nolatech/src/view/screens/login.dart';
 import 'package:prueba_nolatech/src/view/screens/register.dart';
 
 class LoginProvider extends ChangeNotifier {
+  bool showPassword = false;
+
   void goToRegister(context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const Register()));
@@ -11,5 +13,11 @@ class LoginProvider extends ChangeNotifier {
   void goToLogin(context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const Login()));
+  }
+
+  void isShowPassword(bool password) {
+    showPassword = password;
+    print(showPassword);
+    notifyListeners();
   }
 }
