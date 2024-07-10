@@ -62,8 +62,9 @@ class Login extends StatelessWidget {
                 onPressed: () {
                   provider.goToMainPage(context);
                 },
-                child: const Text('Inicia sesion',
-                    style: TextStyle(color: Colors.white, fontSize: fontSize))),
+                child: Text('Inicia sesion',
+                    style: GoogleFonts.caveat(
+                        fontSize: fontSize * 1.5, color: Colors.white))),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -134,9 +135,13 @@ class Login extends StatelessWidget {
             ),
           ),
         ),
-        Text('Inicia Sesion',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.caveat(fontSize: fontSize, color: Colors.white)),
+        Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Text('Inicia Sesion',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.caveat(
+                  fontSize: fontSize * 2, color: Colors.white)),
+        ),
       ],
     );
   }
