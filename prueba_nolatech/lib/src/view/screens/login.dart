@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/providers/login_provider.dart';
@@ -101,29 +102,36 @@ class Login extends StatelessWidget {
   }
 
   Widget customAppBar(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              height: 40,
-              width: 40,
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+    return Row(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: secondaryColor,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  height: 40,
+                  width: 40,
+                  child: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
+        Text('Inicia Sesion',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.caveat(fontSize: fontSize, color: Colors.white)),
+      ],
     );
   }
 
