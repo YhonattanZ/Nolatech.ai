@@ -10,7 +10,62 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [customAppBar(context), textfields(context)],
+        children: [
+          customAppBar(context),
+          textfields(context),
+          checkbox(),
+          TextButton(
+              onPressed: () {},
+              child: Text('¿Olvidaste tu contraseña?',
+                  style: TextStyle(color: secondaryColor))),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 30),
+            width: double.infinity,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: secondaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)))),
+                onPressed: () {},
+                child: Text('Inicia sesion',
+                    style: TextStyle(color: Colors.white, fontSize: fontSize))),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('¿Aun no tienes una cuenta?'),
+              TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Registrate',
+                    style: TextStyle(color: secondaryColor),
+                  )),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget checkbox() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25.0),
+      child: Row(
+        children: [
+          Consumer<LoginProvider>(
+              builder: (_, p, child) => Checkbox.adaptive(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  activeColor: secondaryColor,
+                  value: p.isChecked,
+                  onChanged: (value) {
+                    p.isCheckboxActive(value!);
+                  })),
+          const Text(
+            'Recordar Contraseña',
+            style: TextStyle(color: secondaryColor),
+          )
+        ],
       ),
     );
   }
@@ -43,16 +98,27 @@ class Login extends StatelessWidget {
   }
 
   Widget textfields(context) {
-    final provider = Provider.of<LoginProvider>(context, listen: false);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: TextFormField(
             decoration: InputDecoration(
+                disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.grey.shade400)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: fontColor)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: secondaryColor)),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.red)),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                contentPadding: EdgeInsets.only(left: 5, top: 12),
+                contentPadding: const EdgeInsets.only(left: 5, top: 12),
                 floatingLabelAlignment: FloatingLabelAlignment.start,
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 hintText: 'Email',
@@ -69,9 +135,21 @@ class Login extends StatelessWidget {
               builder: (_, p, child) => TextFormField(
                 obscureText: p.showPassword,
                 decoration: InputDecoration(
+                  disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.grey.shade400)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.grey.shade400)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: secondaryColor)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.red)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10)),
-                  contentPadding: EdgeInsets.only(left: 5, top: 12),
+                  contentPadding: const EdgeInsets.only(left: 5, top: 12),
                   floatingLabelAlignment: FloatingLabelAlignment.start,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                   hintText: 'Contraseña',

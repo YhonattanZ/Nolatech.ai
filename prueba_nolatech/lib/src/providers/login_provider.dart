@@ -4,6 +4,7 @@ import 'package:prueba_nolatech/src/view/screens/register.dart';
 
 class LoginProvider extends ChangeNotifier {
   bool showPassword = false;
+  bool isChecked = false;
 
   void goToRegister(context) {
     Navigator.push(
@@ -18,6 +19,12 @@ class LoginProvider extends ChangeNotifier {
   void isShowPassword(bool password) {
     showPassword = password;
     print(showPassword);
+    notifyListeners();
+  }
+
+  void isCheckboxActive(bool checked) {
+    isChecked = checked;
+    print(isChecked);
     notifyListeners();
   }
 }
