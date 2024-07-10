@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
-import 'package:prueba_nolatech/src/providers/login_provider.dart';
+
 import 'package:prueba_nolatech/src/providers/register_provider.dart';
 import 'package:prueba_nolatech/src/view/widgets/password_textfield.dart';
 import 'package:prueba_nolatech/src/view/widgets/textfield.dart';
@@ -27,9 +27,10 @@ class Register extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(children: [
                   customAppBar(context),
-                  const SizedBox(height: 200),
-                  textfields(context),
-                  checkbox(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 80.0),
+                    child: Center(child: textfields(context)),
+                  ),
                   const Spacer(),
                   footer(context)
                 ]),
@@ -42,68 +43,22 @@ class Register extends StatelessWidget {
   }
 
   Widget footer(context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 50.0),
-      child: Column(
-        children: [
-          TextButton(
-              onPressed: () {},
-              child: const Text('¿Olvidaste tu contraseña?',
-                  style: TextStyle(color: secondaryColor))),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 30),
-            width: double.infinity,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: secondaryColor,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
-                onPressed: () {},
-                child: const Text('Inicia sesion',
-                    style: TextStyle(color: Colors.white, fontSize: fontSize))),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('¿Aun no tienes una cuenta?'),
-              TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Register()));
-                  },
-                  child: const Text(
-                    'Registrate',
-                    style: TextStyle(color: secondaryColor),
-                  )),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget checkbox() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25.0),
-      child: Row(
-        children: [
-          Consumer<LoginProvider>(
-              builder: (_, p, child) => Checkbox.adaptive(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  activeColor: secondaryColor,
-                  value: p.isChecked,
-                  onChanged: (value) {
-                    p.isCheckboxActive(value!);
-                  })),
-          const Text(
-            'Recordar Contraseña',
-            style: TextStyle(color: secondaryColor),
-          )
-        ],
-      ),
+    final provider = Provider.of<RegisterProvider>(context, listen: false);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 60),
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: secondaryColor,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)))),
+          onPressed: () {
+            provider.goToMainPage(context);
+          },
+          child: Text('Registrarme',
+              style: GoogleFonts.caveat(
+                  fontSize: fontSize * 1.5, color: Colors.white))),
     );
   }
 
@@ -136,7 +91,7 @@ class Register extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 15.0),
-          child: Text('Registrate',
+          child: Text('Crea tu cuenta',
               textAlign: TextAlign.center,
               style: GoogleFonts.caveat(
                   fontSize: fontSize * 2, color: Colors.white)),
@@ -150,11 +105,22 @@ class Register extends StatelessWidget {
       children: [
         Consumer<RegisterProvider>(
             builder: (_, p, child) => CustomTextfield(
+                hint: 'Nombre y Apellido',
+                label: 'Ingrese su informacion',
+                icon: Icons.person_2_outlined,
+                controller: p.nameCtrl)),
+        Consumer<RegisterProvider>(
+            builder: (_, p, child) => CustomTextfield(
                 hint: 'Email',
                 label: 'Ingrese su email',
                 icon: Icons.email_outlined,
                 controller: p.emailCtrl)),
-        const SizedBox(height: 20),
+        Consumer<RegisterProvider>(
+            builder: (_, p, child) => CustomTextfield(
+                hint: 'Telefono',
+                label: 'Ingrese su numero de contacto',
+                icon: Icons.phone_outlined,
+                controller: p.phoneCtrl)),
         Consumer<RegisterProvider>(
             builder: (_, p, child) => CustomPasswordTextfield(
                 hint: 'Contraseña',
@@ -163,6 +129,15 @@ class Register extends StatelessWidget {
                 obsText: p.showPassword,
                 onPressed: () {
                   p.isShowPassword(!p.showPassword);
+                })),
+        Consumer<RegisterProvider>(
+            builder: (_, p, child) => CustomPasswordTextfield(
+                hint: 'Confirmar ontraseña',
+                label: 'Repita su contraseña',
+                controller: p.rePasswordCtrl,
+                obsText: p.showConfirmPassword,
+                onPressed: () {
+                  p.isConfirmShowPassword(!p.showConfirmPassword);
                 })),
       ],
     );
