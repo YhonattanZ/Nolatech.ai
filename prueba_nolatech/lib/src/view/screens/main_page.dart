@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
+import 'package:prueba_nolatech/src/models/courts_model.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<String> imagesList = [
-      'assets/images/cancha1.jpg',
-      'assets/images/cancha2.jpg',
-      'assets/images/cancha3.jpg',
+    List<Court> imagesList = [
+      Court(image: 'assets/images/cancha1.jpg', name: 'Cancha A', price: 25),
+      Court(image: 'assets/images/cancha2.jpg', name: 'Cancha B', price: 45),
+      Court(image: 'assets/images/cancha3.jpg', name: 'Cancha C', price: 30),
     ];
     return Scaffold(
       appBar: appBar(),
@@ -52,12 +53,34 @@ class MainPage extends StatelessWidget {
               child: SizedBox(
                 height: 200.0,
                 child: ListView.builder(
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: 15,
-                  itemBuilder: (BuildContext context, int index) => Card(
-                    child: Center(child: Text('Dummy Card Text')),
+                  itemCount: 3,
+                  itemBuilder: (context, int i) => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: secondaryColor),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                      height: 250,
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
+                              child: Image.asset(
+                                imagesList[i].image,
+                                fit: BoxFit.fill,
+                                height: 150,
+                                width: 250,
+                              )),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
