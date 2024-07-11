@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:like_button/like_button.dart';
+import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
+import 'package:prueba_nolatech/src/providers/court_provider.dart';
+import 'package:prueba_nolatech/src/view/widgets/custom_dropdown.dart';
 
 import '../../models/courts_model.dart';
 
@@ -12,10 +15,15 @@ class CourtInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Stack(
+        child: Column(
           children: [
-            carousell(context),
-            courtHeaderButtons(context),
+            Stack(
+              children: [
+                carousell(context),
+                courtHeaderButtons(context),
+              ],
+            ),
+            infoCourt()
           ],
         ),
       ),
@@ -39,9 +47,102 @@ class CourtInfo extends StatelessWidget {
     );
   }
 
+  Widget infoCourt() {
+    return Container(
+      width: double.infinity,
+      height: 200,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  courts.name,
+                  style: const TextStyle(
+                      color: secondaryColor,
+                      fontSize: fontSize * 1.5,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '${courts.price.toInt()}\$',
+                  style: const TextStyle(
+                      color: primaryColor,
+                      fontSize: fontSize * 1.5,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            Text(
+              courts.type,
+              style: const TextStyle(
+                color: secondaryColor,
+              ),
+            ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Disponible',
+                  style: TextStyle(
+                      color: secondaryColor,
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '4 a 6PM',
+                  style: TextStyle(
+                      color: primaryColor,
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            instructor()
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget instructor() {
+    List<String> instructors = [
+      'Antonio Bastidas',
+      'Felipe Fernandez',
+      'Rosa Maria'
+    ];
+
+    return Consumer<CourtsProvider>(
+        builder: (_, p, i) => CustomDropdown(
+              dropdownValue: p.selectedInstructor,
+              permanentHint: 'Instructor',
+              shadow: const BoxShadow(color: Colors.transparent),
+              border: Border.all(color: secondaryColor),
+              items: instructors
+                  .map((e) => DropdownMenuItem<String>(
+                      alignment: Alignment.centerRight,
+                      value: e,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Text(
+                          e,
+                          maxLines: 2,
+                        ),
+                      )))
+                  .toList(),
+              onChanged: (p0) {
+                p.selectedInstructor = p0;
+              },
+            ));
+  }
+
   Widget carousell(context) {
     return ImageSlideshow(
-        indicatorRadius: 5,
+        indicatorRadius: 6,
         width: double.infinity,
         height: 250,
         initialPage: 0,
@@ -99,7 +200,7 @@ class CourtInfo extends StatelessWidget {
               return Icon(
                 Icons.favorite,
                 size: 40,
-                color: isLiked ? fontColor : Colors.grey,
+                color: isLiked ? secondaryColor : Colors.grey,
               );
             },
           ),
