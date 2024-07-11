@@ -42,9 +42,9 @@ class CourtInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
                 'Fecha y Hora',
                 style: TextStyle(
                     fontSize: fontSize * 1.2,
@@ -78,23 +78,26 @@ class CourtInfo extends StatelessWidget {
               ),
             ),
             addCommentsBox(context),
-            Container(
-                height: 50,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                width: double.infinity,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        backgroundColor: fontColor),
-                    onPressed: () {},
-                    child: const Text(
-                      'Reservar',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: fontSize * 1.2),
-                    )))
+            Consumer<CourtsProvider>(
+                builder: (_, p, i) => Container(
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            backgroundColor: fontColor),
+                        onPressed: () {
+                          p.goToReservePage(context, courts);
+                        },
+                        child: const Text(
+                          'Reservar',
+                          style: TextStyle(
+                              color: Colors.white, fontSize: fontSize * 1.2),
+                        ))))
           ]),
     );
   }
