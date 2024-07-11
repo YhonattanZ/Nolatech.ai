@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:prueba_nolatech/src/providers/court_provider.dart';
 import 'package:prueba_nolatech/src/providers/register_provider.dart';
 
 import 'src/providers/login_provider.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
+        ChangeNotifierProvider(create: (context) => CourtsProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

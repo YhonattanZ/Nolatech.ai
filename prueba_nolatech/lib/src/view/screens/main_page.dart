@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/models/courts_model.dart';
+import 'package:prueba_nolatech/src/providers/court_provider.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -26,6 +28,7 @@ class MainPage extends StatelessWidget {
           type: 'Cancha C',
           price: 30),
     ];
+
     return Scaffold(
       appBar: appBar(),
       body: SingleChildScrollView(
@@ -60,7 +63,7 @@ class MainPage extends StatelessWidget {
                         fontSize: fontSize * 1.5, color: secondaryColor),
                   )),
             ),
-            cardInfoWithImage(imagesList),
+            cardInfoWithImage(imagesList, context),
             Divider(
               color: secondaryColor.withOpacity(0.2),
               indent: 20,
@@ -79,7 +82,9 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Widget cardInfoWithImage(List<Court> imagesList) {
+  Widget cardInfoWithImage(List<Court> imagesList, context) {
+    final provider = Provider.of<CourtsProvider>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: SizedBox(
@@ -93,6 +98,7 @@ class MainPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: () {
+                provider.goToCourtPage(context, imagesList[i]);
                 print(imagesList[i].name);
               },
               child: Container(
@@ -109,7 +115,7 @@ class MainPage extends StatelessWidget {
                             topRight: Radius.circular(10)),
                         child: Image.asset(
                           imagesList[i].image,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                           height: 150,
                           width: 250,
                         )),
