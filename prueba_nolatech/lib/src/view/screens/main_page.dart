@@ -10,9 +10,21 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Court> imagesList = [
-      Court(image: 'assets/images/cancha1.jpg', name: 'Cancha A', price: 25),
-      Court(image: 'assets/images/cancha2.jpg', name: 'Cancha B', price: 45),
-      Court(image: 'assets/images/cancha3.jpg', name: 'Cancha C', price: 30),
+      const Court(
+          image: 'assets/images/cancha1.jpg',
+          name: 'Big Court',
+          type: 'Cancha A',
+          price: 25),
+      const Court(
+          image: 'assets/images/cancha2.jpg',
+          name: 'Small Court',
+          type: 'Cancha B',
+          price: 45),
+      const Court(
+          image: 'assets/images/cancha3.jpg',
+          name: 'Medium Court',
+          type: 'Cancha C',
+          price: 30),
     ];
     return Scaffold(
       appBar: appBar(),
@@ -39,7 +51,7 @@ class MainPage extends StatelessWidget {
               endIndent: 20,
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 20.0),
+              padding: EdgeInsets.only(left: 30.0),
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -48,58 +60,64 @@ class MainPage extends StatelessWidget {
                         fontSize: fontSize * 1.5, color: secondaryColor),
                   )),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SizedBox(
-                height: 200.0,
-                child: ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, int i) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: secondaryColor),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      height: 250,
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10)),
-                              child: Image.asset(
-                                imagesList[i].image,
-                                fit: BoxFit.fill,
-                                height: 150,
-                                width: 250,
-                              )),
-                          const SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            cardInfoWithImage(imagesList),
             Divider(
               color: secondaryColor.withOpacity(0.2),
               indent: 20,
               endIndent: 20,
             ),
             ListView.builder(
-              physics: ClampingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: 15,
-              itemBuilder: (BuildContext context, int index) => Card(
-                child: Center(child: Text('Dummy Card Text')),
-              ),
+              itemBuilder: (ctx, i) => Container(),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget cardInfoWithImage(List<Court> imagesList) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: SizedBox(
+        height: 300.0,
+        child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 3,
+          itemBuilder: (context, int i) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () {
+                print(imagesList[i].name);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: secondaryColor),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))),
+                height: 250,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)),
+                        child: Image.asset(
+                          imagesList[i].image,
+                          fit: BoxFit.fill,
+                          height: 150,
+                          width: 250,
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
