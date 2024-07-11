@@ -7,6 +7,7 @@ import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/providers/court_provider.dart';
 
 import '../../models/courts_model.dart';
+import '../../providers/reverse_court_provider.dart';
 
 class ReserveCourt extends StatelessWidget {
   const ReserveCourt({super.key, required this.courts});
@@ -37,6 +38,7 @@ class ReserveCourt extends StatelessWidget {
   }
 
   Widget footer(BuildContext context) {
+    final provider = Provider.of<CourtsProvider>(context, listen: false);
     return Container(
       width: double.infinity,
       color: Colors.white,
@@ -73,7 +75,9 @@ class ReserveCourt extends StatelessWidget {
                         side: BorderSide(color: secondaryColor),
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -88,21 +92,34 @@ class ReserveCourt extends StatelessWidget {
                   )),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: SizedBox(
-              height: 60,
-              width: double.infinity,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: fontColor,
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  ),
-                  onPressed: () {},
-                  child: const Text('Pagar',
-                      style: TextStyle(
-                          fontSize: fontSize * 1.2, color: Colors.white))),
+          Consumer<ReserveCourtProvider>(
+            builder: (_, p, i) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: fontColor,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                    onPressed: () {
+                      p
+                          .addEventIfSlotAvailable(
+                              provider.date,
+                              provider.date,
+                              p.idCalendar.toString(),
+                              '${courts.name} ${courts.type}',
+                              provider.commentsCtrl.text)
+                          .then((e) {
+                        p.addCourt(courts);
+                      });
+                    },
+                    child: const Text('Pagar',
+                        style: TextStyle(
+                            fontSize: fontSize * 1.2, color: Colors.white))),
+              ),
             ),
           ),
           Padding(

@@ -5,6 +5,7 @@ import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/providers/court_provider.dart';
+import 'package:prueba_nolatech/src/providers/reverse_court_provider.dart';
 import 'package:prueba_nolatech/src/view/widgets/custom_dropdown.dart';
 
 import '../../models/courts_model.dart';
@@ -36,6 +37,8 @@ class CourtInfo extends StatelessWidget {
   }
 
   Widget scheduleCourt(context) {
+    final reserveProvider =
+        Provider.of<ReserveCourtProvider>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -91,7 +94,9 @@ class CourtInfo extends StatelessWidget {
                                     BorderRadius.all(Radius.circular(10))),
                             backgroundColor: fontColor),
                         onPressed: () {
-                          p.goToReservePage(context, courts);
+                          reserveProvider.retrieveCalendars().then((e) {
+                            p.goToReservePage(context, courts);
+                          });
                         },
                         child: const Text(
                           'Reservar',

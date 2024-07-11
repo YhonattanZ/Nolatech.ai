@@ -115,8 +115,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                   child: child,
                 ),
               ),
-              dropdownStyleData:
-                  const DropdownStyleData(offset: Offset(0, -15)),
+              dropdownStyleData: const DropdownStyleData(offset: Offset(0, 0)),
               //We define the items propertie with List<DropdownMenuItem<String>> as required parameter
               items: widget.items,
               onChanged: widget.onChanged),

@@ -4,6 +4,7 @@ import 'package:prueba_nolatech/src/providers/court_provider.dart';
 import 'package:prueba_nolatech/src/providers/register_provider.dart';
 
 import 'src/providers/login_provider.dart';
+import 'src/providers/reverse_court_provider.dart';
 import 'src/view/screens/splash_screen.dart';
 
 void main() {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
         ChangeNotifierProvider(create: (context) => CourtsProvider()),
-        // ChangeNotifierProvider(create: (context) => ReserveCourtProvider()),
+        ChangeNotifierProvider(create: (context) => ReserveCourtProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
