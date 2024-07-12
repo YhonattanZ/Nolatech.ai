@@ -137,11 +137,11 @@ class MyReserves extends StatelessWidget {
                         children: [
                           const Icon(Icons.lock_clock, color: secondaryColor),
                           const SizedBox(width: 10),
-                          Text(p.bookings[i].startTime
-                              .difference(p.bookings[i].endTime)
-                              .toString()),
+                          Text(p.formatDuration(
+                              p.bookings[i].startTime, p.bookings[i].endTime)),
                           SizedBox(width: 10),
-                          Text('${p.bookings[i].court.price.toInt()}\$')
+                          Text(
+                              '${p.calculateTotalCost(p.bookings[i].startTime, p.bookings[i].endTime, p.bookings[i].court.price)}\$')
                         ],
                       ),
                     ],
