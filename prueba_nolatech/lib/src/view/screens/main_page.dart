@@ -15,23 +15,26 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Court> imagesList = [
       Court(
-          image: 'assets/images/cancha1.jpg',
-          name: 'Big Court',
-          type: 'Cancha A',
-          price: 25,
-          startDate: DateTime.now()),
+        courtId: 1,
+        image: 'assets/images/cancha1.jpg',
+        name: 'Big Court',
+        type: 'Cancha A',
+        price: 25,
+      ),
       Court(
-          image: 'assets/images/cancha2.jpg',
-          name: 'Small Court',
-          type: 'Cancha B',
-          price: 45,
-          startDate: DateTime.now()),
+        courtId: 2,
+        image: 'assets/images/cancha2.jpg',
+        name: 'Small Court',
+        type: 'Cancha B',
+        price: 45,
+      ),
       Court(
-          image: 'assets/images/cancha3.jpg',
-          name: 'Medium Court',
-          type: 'Cancha C',
-          price: 30,
-          startDate: DateTime.now()),
+        courtId: 3,
+        image: 'assets/images/cancha3.jpg',
+        name: 'Medium Court',
+        type: 'Cancha C',
+        price: 30,
+      ),
     ];
 
     return Scaffold(
@@ -85,8 +88,11 @@ class MainPage extends StatelessWidget {
                   physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: p.reservedCourts.length,
-                  itemBuilder: (ctx, i) => reserveCourtInfo(p, i)),
+                  itemCount: p.bookings.length,
+                  itemBuilder: (ctx, i) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: reservedBooking(p, i),
+                      )),
             ),
           ],
         ),
@@ -94,7 +100,7 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Widget reserveCourtInfo(ReserveCourtProvider p, int i) {
+  Widget reservedBooking(ReserveCourtProvider p, int i) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         height: 150,
@@ -114,7 +120,7 @@ class MainPage extends StatelessWidget {
                     Radius.circular(10),
                   ),
                   child: Image.asset(
-                    p.reservedCourts[i].image,
+                    p.bookings[i].court.image,
                     fit: BoxFit.cover,
                     height: 80,
                     width: 80,
@@ -130,17 +136,17 @@ class MainPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(p.reservedCourts[i].name),
+                          Text(p.bookings[i].court.name),
                         ],
                       ),
-                      Text(p.reservedCourts[i].type),
+                      Text(p.bookings[i].court.type),
                       Row(
                         children: [
                           const Icon(Icons.calendar_today,
                               color: secondaryColor),
                           const SizedBox(width: 10),
                           Text(DateFormat('dd/MM/yyyy')
-                              .format(p.reservedCourts[i].startDate!)),
+                              .format(p.bookings[i].date)),
                         ],
                       ),
                       const Row(
@@ -163,7 +169,7 @@ class MainPage extends StatelessWidget {
                           const SizedBox(width: 10),
                           Text('2H'),
                           SizedBox(width: 10),
-                          Text('${p.reservedCourts[i].price.toInt()}\$')
+                          Text('${p.bookings[i].court.price.toInt()}\$')
                         ],
                       ),
                     ],
@@ -236,15 +242,15 @@ class MainPage extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       child: Row(
                         children: [
-                          const Icon(Icons.calendar_month_outlined,
+                          const Icon(Icons.calendar_today_outlined,
                               color: secondaryColor),
                           const SizedBox(width: 5),
-                          Text(
-                            DateFormat('dd/MM/yyyy')
-                                .format(imagesList[i].startDate!),
-                            style: const TextStyle(
-                                color: secondaryColor, fontSize: fontSize),
-                          )
+                          // Text(
+                          //   DateFormat('dd/MM/yyyy')
+                          //       .format(imagesList[i].startDate!),
+                          //   style: const TextStyle(
+                          //       color: secondaryColor, fontSize: fontSize),
+                          // )
                         ],
                       ),
                     ),

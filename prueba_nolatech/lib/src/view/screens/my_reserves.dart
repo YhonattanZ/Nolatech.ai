@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/providers/reverse_court_provider.dart';
+import 'package:prueba_nolatech/src/view/screens/main_page.dart';
 
 class MyReserves extends StatelessWidget {
   const MyReserves({super.key});
@@ -30,7 +31,12 @@ class MyReserves extends StatelessWidget {
                           side: BorderSide(color: secondaryColor),
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainPage()));
+                    },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -58,7 +64,7 @@ class MyReserves extends StatelessWidget {
         physics: const ClampingScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: p.reservedCourts.length,
+        itemCount: p.bookings.length,
         itemBuilder: (ctx, i) => cardInfo(p, i),
       ),
     );
@@ -78,18 +84,18 @@ class MyReserves extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ClipRRect(
+                padding: const EdgeInsets.all(10.0),
+                child: ClipRRect(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  child: Image.asset(
-                    p.reservedCourts[i].image,
-                    fit: BoxFit.cover,
-                    height: 80,
-                    width: 80,
-                  )),
-            ),
+                  // child: Image.asset(
+                  //   p.reservedCourts[i].image,
+                  //   fit: BoxFit.cover,
+                  //   height: 80,
+                  //   width: 80,
+                  // )),
+                )),
             Flexible(
               child: SizedBox(
                 child: Padding(
@@ -100,17 +106,17 @@ class MyReserves extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(p.reservedCourts[i].name),
+                          // Text(p.reservedCourts[i].name),
                         ],
                       ),
-                      Text(p.reservedCourts[i].type),
+                      // Text(p.reservedCourts[i].type),
                       Row(
                         children: [
                           const Icon(Icons.calendar_today,
                               color: secondaryColor),
                           const SizedBox(width: 10),
-                          Text(DateFormat('dd/MM/yyyy')
-                              .format(p.reservedCourts[i].startDate!)),
+                          // Text(DateFormat('dd/MM/yyyy')
+                          //     .format(p.reservedCourts[i].startDate!)),
                         ],
                       ),
                       const Row(
@@ -133,7 +139,7 @@ class MyReserves extends StatelessWidget {
                           const SizedBox(width: 10),
                           Text('2H'),
                           SizedBox(width: 10),
-                          Text('${p.reservedCourts[i].price.toInt()}\$')
+                          // Text('${p.reservedCourts[i].price.toInt()}\$')
                         ],
                       ),
                     ],

@@ -4,14 +4,17 @@ import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
-import 'package:prueba_nolatech/src/providers/court_provider.dart';
+import 'package:prueba_nolatech/src/models/booking.dart';
+
+import 'package:prueba_nolatech/src/providers/reverse_court_provider.dart';
+import 'package:prueba_nolatech/src/view/widgets/custom_dropdown.dart';
 
 import '../../models/courts_model.dart';
-import '../../providers/reverse_court_provider.dart';
 
 class ReserveCourt extends StatelessWidget {
   const ReserveCourt({super.key, required this.courts});
   final Court courts;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,180 +31,158 @@ class ReserveCourt extends StatelessWidget {
               ],
             ),
             infoCourt(),
-            resumeInfoCourt(context),
-            const SizedBox(height: 20),
-            footer(context),
+            scheduleCourt(context)
           ],
         ),
       ),
     );
   }
 
-  Widget footer(BuildContext context) {
-    final provider = Provider.of<CourtsProvider>(context, listen: false);
-    return Container(
-      width: double.infinity,
-      color: Colors.white,
+  Widget scheduleCourt(context) {
+    final reserveProvider =
+        Provider.of<ReserveCourtProvider>(context, listen: false);
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
       child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Total a pagar:',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: fontSize * 1.2,
-                      color: secondaryColor),
-                ),
-                Text('${courts.price.toInt()}\$',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: fontSize * 1.2,
-                        color: secondaryColor)),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
-            child: SizedBox(
-              height: 60,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                        side: BorderSide(color: secondaryColor),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.calendar_month,
-                        color: secondaryColor,
-                      ),
-                      Text('Reprogramar',
-                          style: TextStyle(
-                              fontSize: fontSize, color: secondaryColor))
-                    ],
-                  )),
-            ),
-          ),
-          Consumer<ReserveCourtProvider>(
-            builder: (_, p, i) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: SizedBox(
-                height: 60,
-                width: double.infinity,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: fontColor,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                    ),
-                    onPressed: () {
-                      p
-                          .addEventIfSlotAvailable(
-                              provider.date,
-                              provider.date,
-                              p.idCalendar.toString(),
-                              '${courts.name} ${courts.type}',
-                              provider.commentsCtrl.text)
-                          .then((e) {
-                        p.addCourt(courts);
-                        p.goToMyReserves(context);
-                      });
-                    },
-                    child: const Text('Pagar',
-                        style: TextStyle(
-                            fontSize: fontSize * 1.2, color: Colors.white))),
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Fecha y Hora',
+                style: TextStyle(
+                    fontSize: fontSize * 1.2,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-            child: SizedBox(
-              height: 60,
-              width: double.infinity,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                        side: BorderSide(color: secondaryColor),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Cancelar',
-                      style: TextStyle(
-                          fontSize: fontSize * 1.2, color: secondaryColor))),
+            Consumer<ReserveCourtProvider>(
+              builder: (_, p, i) => dateSelector(() {
+                p.selectDate(context);
+              }, 'Fecha:', p.date),
             ),
-          )
-        ],
+            Consumer<ReserveCourtProvider>(
+              builder: (_, p, i) => timeSelector(() {
+                p.selectInitHour(context);
+              }, 'Hora de inicio:', p.initHour),
+            ),
+            Consumer<ReserveCourtProvider>(
+              builder: (_, p, i) => timeSelector(() {
+                p.selectEndHour(context);
+              }, 'Hora de fin:', p.endHour),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20.0, left: 8),
+              child: Text(
+                'Agrega un comentario',
+                style: TextStyle(
+                    fontSize: fontSize * 1.2,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor),
+              ),
+            ),
+            addCommentsBox(context),
+            Consumer<ReserveCourtProvider>(
+                builder: (_, p, i) => Container(
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            backgroundColor: fontColor),
+                        onPressed: () {
+                          reserveProvider.retrieveCalendars().then((e) {
+                            p.goToConfirmReserve(
+                                context,
+                                Booking(
+                                    startTime: p.initHour!,
+                                    endTime: p.endHour!,
+                                    instructor: p.instructorName!,
+                                    courtId: courts.courtId.toString(),
+                                    date: p.date,
+                                    userName: userName,
+                                    court: courts));
+                          });
+                        },
+                        child: const Text(
+                          'Reservar',
+                          style: TextStyle(
+                              color: Colors.white, fontSize: fontSize * 1.2),
+                        ))))
+          ]),
+    );
+  }
+
+  Widget addCommentsBox(context) {
+    final provider = Provider.of<ReserveCourtProvider>(context, listen: false);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      child: TextField(
+        textInputAction: TextInputAction.done,
+        controller: provider.commentsCtrl,
+        style: const TextStyle(color: Colors.blue),
+        scrollPadding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        maxLines: 3,
+        textAlign: TextAlign.start,
+        decoration: const InputDecoration(
+          hintText: 'Agrega un comentario...',
+          hintStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: 16,
+          ),
+          disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(width: 0.5, color: Colors.grey)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: primaryColor)),
+          enabledBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+          border: OutlineInputBorder(borderSide: BorderSide(width: 0.2)),
+        ),
       ),
     );
   }
 
-  Widget resumeInfoCourt(context) {
-    final courtProvider = Provider.of<CourtsProvider>(context, listen: false);
-
-    return SizedBox(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Text(
-            'RESUMEN',
-            style: TextStyle(
-                fontSize: fontSize * 1.2,
-                color: secondaryColor,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+  Widget dateSelector(VoidCallback onTap, String title, DateTime date) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          height: 50,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(10)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              infoRow(courts.type, Icons.sports_tennis_outlined),
-              infoRow(DateFormat('dd/MM/yyyy').format(courtProvider.date),
-                  Icons.calendar_month),
+              Text(title, style: const TextStyle(fontSize: 16)),
+              Text(DateFormat('dd/MM/yyyy').format(date)),
             ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              infoRow(courtProvider.selectedInstructor.toString(),
-                  Icons.person_outline_outlined),
-              // infoRow(DateFormat('hh:mm').format(courtProvider.initHour ?? ''),
-              //     Icons.lock_clock_outlined),
-            ],
-          ),
-        ),
-      ],
-    ));
+          )),
+    );
   }
 
-  Widget infoRow(String title, IconData icon) {
-    return Row(
-      children: [
-        Icon(icon, color: secondaryColor),
-        Text(
-          title,
-          style: const TextStyle(fontSize: fontSize - 2),
-        ),
-      ],
+  Widget timeSelector(VoidCallback onTap, String title, DateTime? date) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          height: 50,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(title, style: const TextStyle(fontSize: 16)),
+              Text(DateFormat('hh:mm').format(date ?? DateTime.now())),
+            ],
+          )),
     );
   }
 
@@ -225,7 +206,7 @@ class ReserveCourt extends StatelessWidget {
   Widget infoCourt() {
     return Container(
       width: double.infinity,
-      height: 150,
+      height: 200,
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -252,12 +233,10 @@ class ReserveCourt extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10),
-              child: Text(
-                courts.type,
-                style: const TextStyle(
-                    color: secondaryColor, fontSize: fontSize - 2),
+            Text(
+              courts.type,
+              style: const TextStyle(
+                color: secondaryColor,
               ),
             ),
             const Row(
@@ -279,10 +258,43 @@ class ReserveCourt extends StatelessWidget {
                 ),
               ],
             ),
+            instructor()
           ],
         ),
       ),
     );
+  }
+
+  Widget instructor() {
+    List<String> instructors = [
+      'Antonio Bastidas',
+      'Felipe Fernandez',
+      'Rosa Maria'
+    ];
+
+    return Consumer<ReserveCourtProvider>(
+        builder: (_, p, i) => CustomDropdown(
+              dropdownValue: p.instructorName,
+              permanentHint: 'Instructor',
+              shadow: const BoxShadow(color: Colors.transparent),
+              border: Border.all(color: secondaryColor),
+              items: instructors
+                  .map((e) => DropdownMenuItem<String>(
+                      alignment: Alignment.centerRight,
+                      value: e,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Text(
+                          e,
+                          maxLines: 2,
+                        ),
+                      )))
+                  .toList(),
+              onChanged: (p0) {
+                p.instructorName = p0!;
+                print(p.instructorName);
+              },
+            ));
   }
 
   Widget carousell(context) {
