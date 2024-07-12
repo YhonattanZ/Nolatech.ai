@@ -21,21 +21,23 @@ class ReserveCourtProvider extends ChangeNotifier {
 
   TextEditingController commentsCtrl = TextEditingController();
 
-  void getTotal(int hours) {
-    var total = initHour?.difference(endHour!);
-    print(total);
+  String formatDuration(DateTime startTime, DateTime endTime) {
+    Duration duration = endTime.difference(startTime);
+    int totalHours = duration.inHours;
+
+    String formattedDuration = totalHours.toString().padLeft(1, '0');
+    return "${formattedDuration}H";
   }
 
-  void addCourt(Booking court) {
-    if (bookings.length < 3) {
-      bookings.add(court);
-    } else {
-      print("No se puede reservar más de 3 canchas.");
-    }
+  double calculateTotalCost(
+      DateTime startTime, DateTime endTime, double pricePerHour) {
+    Duration duration = endTime.difference(startTime);
+    int totalHours = duration.inHours;
+    return totalHours * pricePerHour;
   }
 
-  void deleteCourt(Court court) {
-    bookings.remove(court);
+  void deleteCourt(Booking booking) {
+    bookings.remove(booking);
   }
 
   void goToConfirmReserve(context, Booking booking) {
@@ -54,10 +56,12 @@ class ReserveCourtProvider extends ChangeNotifier {
 
   bool addBooking(Booking booking) {
     if (_checkAvailability(booking.courtId, booking.date)) {
-      bookings.add(booking);
-      print(booking);
-      notifyListeners();
-      return true;
+      if (bookings.length < 3) {
+        bookings.add(booking);
+        print(booking);
+        notifyListeners();
+        return true;
+      }
     }
     return false;
   }

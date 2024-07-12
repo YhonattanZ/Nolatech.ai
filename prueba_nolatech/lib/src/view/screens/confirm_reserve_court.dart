@@ -5,9 +5,7 @@ import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/models/booking.dart';
-import 'package:prueba_nolatech/src/providers/court_provider.dart';
 
-import '../../models/courts_model.dart';
 import '../../providers/reverse_court_provider.dart';
 
 class ConfirmReserveCourt extends StatelessWidget {
@@ -57,11 +55,14 @@ class ConfirmReserveCourt extends StatelessWidget {
                       fontSize: fontSize * 1.2,
                       color: secondaryColor),
                 ),
-                Text('${booking.court.price}\$',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: fontSize * 1.2,
-                        color: secondaryColor)),
+                Consumer<ReserveCourtProvider>(
+                  builder: (_, p, i) => Text(
+                      '${p.calculateTotalCost(p.initHour!, p.endHour!, booking.court.price)}\$',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: fontSize * 1.2,
+                          color: secondaryColor)),
+                ),
               ],
             ),
           ),
@@ -106,17 +107,24 @@ class ConfirmReserveCourt extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     onPressed: () {
-                      // p
-                      //     .addEventIfSlotAvailable(
-                      //         provider.date,
-                      //         provider.date,
-                      //         p.idCalendar.toString(),
-                      //         '${courts.name} ${courts.type}',
-                      //         provider.commentsCtrl.text)
-                      //     .then((e) {
-                      // p.addCourt(courts);
-                      // p.goToMyReserves(context);
-                      // });
+                      p
+                          .addEventIfSlotAvailable(
+                              p.initHour!,
+                              p.endHour!,
+                              p.idCalendar.toString(),
+                              '${booking.court.name} ${booking.court.type}',
+                              p.commentsCtrl.text)
+                          .then((e) {
+                        p.addBooking(Booking(
+                            startTime: booking.startTime,
+                            endTime: booking.endTime,
+                            instructor: booking.instructor,
+                            courtId: booking.courtId,
+                            date: booking.date,
+                            userName: booking.userName,
+                            court: booking.court));
+                        p.goToMyReserves(context);
+                      });
                     },
                     child: const Text('Pagar',
                         style: TextStyle(
@@ -185,8 +193,7 @@ class ConfirmReserveCourt extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               infoRow(p.instructorName!, Icons.person_outline_outlined),
-              infoRow(
-                  '${DateFormat('hh:mm').format(p.initHour!)} - ${DateFormat('hh:mm').format(p.endHour!)}',
+              infoRow(p.formatDuration(p.initHour!, p.endHour!),
                   Icons.lock_clock_outlined),
             ],
           ),
@@ -225,8 +232,6 @@ class ConfirmReserveCourt extends StatelessWidget {
   }
 
   Widget infoCourt(context) {
-    final p = Provider.of<ReserveCourtProvider>(context, listen: false);
-
     return Container(
       width: double.infinity,
       height: 150,
@@ -290,8 +295,6 @@ class ConfirmReserveCourt extends StatelessWidget {
   }
 
   Widget carousell(context) {
-    final p = Provider.of<ReserveCourtProvider>(context, listen: false);
-
     return ImageSlideshow(
         indicatorRadius: 6,
         width: double.infinity,

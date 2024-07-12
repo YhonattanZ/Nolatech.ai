@@ -84,18 +84,18 @@ class MyReserves extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ClipRRect(
+              padding: const EdgeInsets.all(10.0),
+              child: ClipRRect(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
-                  // child: Image.asset(
-                  //   p.reservedCourts[i].image,
-                  //   fit: BoxFit.cover,
-                  //   height: 80,
-                  //   width: 80,
-                  // )),
-                )),
+                  child: Image.asset(
+                    p.bookings[i].court.image,
+                    fit: BoxFit.cover,
+                    height: 80,
+                    width: 80,
+                  )),
+            ),
             Flexible(
               child: SizedBox(
                 child: Padding(
@@ -106,40 +106,42 @@ class MyReserves extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          // Text(p.reservedCourts[i].name),
+                          Text(p.bookings[i].court.name),
                         ],
                       ),
-                      // Text(p.reservedCourts[i].type),
+                      Text(p.bookings[i].court.type),
                       Row(
                         children: [
                           const Icon(Icons.calendar_today,
                               color: secondaryColor),
                           const SizedBox(width: 10),
-                          // Text(DateFormat('dd/MM/yyyy')
-                          //     .format(p.reservedCourts[i].startDate!)),
+                          Text(DateFormat('dd/MM/yyyy')
+                              .format(p.bookings[i].date)),
                         ],
                       ),
-                      const Row(
+                      Row(
                         children: [
-                          Text('Reservado por:'),
-                          SizedBox(width: 5),
-                          CircleAvatar(
+                          const Text('Reservado por:'),
+                          const SizedBox(width: 5),
+                          const CircleAvatar(
                             radius: 15,
                             backgroundImage: AssetImage(
                               'assets/images/profile.jpg',
                             ),
                           ),
-                          SizedBox(width: 5),
-                          Text(userName),
+                          const SizedBox(width: 5),
+                          Text(p.bookings[i].userName),
                         ],
                       ),
                       Row(
                         children: [
                           const Icon(Icons.lock_clock, color: secondaryColor),
                           const SizedBox(width: 10),
-                          Text('2H'),
+                          Text(p.bookings[i].startTime
+                              .difference(p.bookings[i].endTime)
+                              .toString()),
                           SizedBox(width: 10),
-                          // Text('${p.reservedCourts[i].price.toInt()}\$')
+                          Text('${p.bookings[i].court.price.toInt()}\$')
                         ],
                       ),
                     ],

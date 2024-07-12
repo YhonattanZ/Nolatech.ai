@@ -5,8 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/models/courts_model.dart';
-import 'package:prueba_nolatech/src/providers/court_provider.dart';
+
 import 'package:prueba_nolatech/src/providers/reverse_court_provider.dart';
+import 'package:prueba_nolatech/src/view/screens/reserve_court.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -182,8 +183,6 @@ class MainPage extends StatelessWidget {
   }
 
   Widget cardInfoWithImage(List<Court> imagesList, context) {
-    final provider = Provider.of<CourtsProvider>(context, listen: false);
-
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: SizedBox(
@@ -197,7 +196,11 @@ class MainPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               onTap: () {
-                provider.goToCourtPage(context, imagesList[i]);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ReserveCourt(courts: imagesList[i])));
                 print(imagesList[i].name);
               },
               child: Container(
@@ -282,7 +285,11 @@ class MainPage extends StatelessWidget {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)))),
                             onPressed: () {
-                              provider.goToCourtPage(context, imagesList[i]);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ReserveCourt(courts: imagesList[i])));
                             },
                             child: const Text(
                               'Reservar',
