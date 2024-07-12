@@ -5,15 +5,29 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/models/courts_model.dart';
+import 'package:prueba_nolatech/src/models/weather.dart';
 
 import 'package:prueba_nolatech/src/providers/reverse_court_provider.dart';
+import 'package:prueba_nolatech/src/providers/weather_api_provider.dart';
 import 'package:prueba_nolatech/src/view/screens/reserve_court.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
   @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  @override
   Widget build(BuildContext context) {
+    final apiProvider = Provider.of<WeatherApiProvider>(context, listen: false);
+
+    @override
+    initState() {
+      apiProvider.fetchWeather();
+    }
+
     List<Court> imagesList = [
       Court(
         courtId: 1,
@@ -32,7 +46,7 @@ class MainPage extends StatelessWidget {
       Court(
         courtId: 3,
         image: 'assets/images/cancha3.jpg',
-        name: 'Medium Court',
+        name: 'Mid Court',
         type: 'Cancha C',
         price: 30,
       ),
@@ -72,7 +86,7 @@ class MainPage extends StatelessWidget {
                         fontSize: fontSize * 1.5, color: secondaryColor),
                   )),
             ),
-            cardInfoWithImage(imagesList, context),
+            cardInfoWithImage(imagesList, context, apiProvider),
             Divider(
               color: secondaryColor.withOpacity(0.2),
             ),
@@ -208,7 +222,8 @@ class MainPage extends StatelessWidget {
         ));
   }
 
-  Widget cardInfoWithImage(List<Court> imagesList, context) {
+  Widget cardInfoWithImage(
+      List<Court> imagesList, context, WeatherApiProvider provider) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: SizedBox(
@@ -247,15 +262,43 @@ class MainPage extends StatelessWidget {
                           height: 150,
                           width: 250,
                         )),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        imagesList[i].name,
-                        style: const TextStyle(
-                            fontSize: fontSize * 1.2,
-                            color: secondaryColor,
-                            fontWeight: FontWeight.bold),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            imagesList[i].name,
+                            style: const TextStyle(
+                                fontSize: fontSize * 1.2,
+                                color: secondaryColor,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        FutureBuilder<Weathers>(
+                            future: provider.fetchWeather(),
+                            builder: (context, snapshot) {
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.none:
+                                case ConnectionState.waiting:
+                                  return CircularProgressIndicator.adaptive();
+                                case ConnectionState.active:
+                                case ConnectionState.done:
+                                  if (snapshot.hasData) {
+                                    return Row(
+                                      children: [
+                                        Image.network(
+                                            'http://openweathermap.org/img/w/${snapshot.data?.weather?.first.icon}.png'),
+                                        Text((snapshot.data?.main?.temp)
+                                            .toString()
+                                            .padLeft(2, '0'))
+                                      ],
+                                    );
+                                  }
+                              }
+                              return const SizedBox();
+                            })
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0),

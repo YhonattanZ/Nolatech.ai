@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:prueba_nolatech/src/providers/register_provider.dart';
+import 'package:prueba_nolatech/src/providers/weather_api_provider.dart';
 
 import 'src/providers/login_provider.dart';
 import 'src/providers/reverse_court_provider.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => RegisterProvider()),
         ChangeNotifierProvider(create: (context) => ReserveCourtProvider()),
+        ChangeNotifierProvider(create: (context) => WeatherApiProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

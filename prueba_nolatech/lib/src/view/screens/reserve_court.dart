@@ -59,7 +59,7 @@ class ReserveCourt extends StatelessWidget {
             ),
             Consumer<ReserveCourtProvider>(
               builder: (_, p, i) => dateSelector(() {
-                p.selectDate(context);
+                p.selectDate(context, courts.courtId.toString());
               }, 'Fecha:', p.date),
             ),
             Consumer<ReserveCourtProvider>(
@@ -239,18 +239,20 @@ class ReserveCourt extends StatelessWidget {
                 color: secondaryColor,
               ),
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Disponible',
-                  style: TextStyle(
-                      color: secondaryColor,
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.bold),
+                Consumer<ReserveCourtProvider>(
+                  builder: (_, p, i) => Text(
+                    p.isDateAvailable ? 'Disponible' : 'No disponible',
+                    style: TextStyle(
+                        color: p.isDateAvailable ? fontColor : Colors.red,
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Text(
-                  '4 a 6PM',
+                  '7AM a 7PM',
                   style: TextStyle(
                       color: primaryColor,
                       fontSize: fontSize,

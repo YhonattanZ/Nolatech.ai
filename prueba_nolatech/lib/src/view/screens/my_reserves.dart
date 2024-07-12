@@ -6,7 +6,10 @@ import 'package:provider/provider.dart';
 
 import 'package:prueba_nolatech/src/constants/constants.dart';
 import 'package:prueba_nolatech/src/providers/reverse_court_provider.dart';
+import 'package:prueba_nolatech/src/providers/weather_api_provider.dart';
 import 'package:prueba_nolatech/src/view/screens/main_page.dart';
+
+import '../../models/weather.dart';
 
 class MyReserves extends StatelessWidget {
   const MyReserves({super.key});
@@ -73,7 +76,6 @@ class MyReserves extends StatelessWidget {
   Widget cardInfo(ReserveCourtProvider p, int i) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        height: 150,
         width: double.infinity,
         decoration: BoxDecoration(
             color: Colors.white,
@@ -84,7 +86,7 @@ class MyReserves extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(left: 15.0, top: 15, right: 20),
               child: ClipRRect(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(10),
@@ -98,42 +100,69 @@ class MyReserves extends StatelessWidget {
             ),
             Flexible(
               child: SizedBox(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(p.bookings[i].court.name),
-                        ],
-                      ),
-                      Text(p.bookings[i].court.type),
-                      Row(
-                        children: [
-                          const Icon(Icons.calendar_today,
-                              color: secondaryColor),
-                          const SizedBox(width: 10),
-                          Text(DateFormat('dd/MM/yyyy')
-                              .format(p.bookings[i].date)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Text('Reservado por:'),
-                          const SizedBox(width: 5),
-                          const CircleAvatar(
-                            radius: 15,
-                            backgroundImage: AssetImage(
-                              'assets/images/profile.jpg',
-                            ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(p.bookings[i].court.name),
+                        Consumer<WeatherApiProvider>(
+                          builder: (_, p, i) => FutureBuilder<Weathers>(
+                              future: p.fetchWeather(),
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                  case ConnectionState.waiting:
+                                    return const CircularProgressIndicator
+                                        .adaptive();
+                                  case ConnectionState.active:
+                                  case ConnectionState.done:
+                                    if (snapshot.hasData) {
+                                      return Row(
+                                        children: [
+                                          Image.network(
+                                            'http://openweathermap.org/img/w/${snapshot.data?.weather?.first.icon}.png',
+                                            scale: 1.1,
+                                          ),
+                                          Text((snapshot.data?.main?.temp)
+                                              .toString()
+                                              .padLeft(2, '0'))
+                                        ],
+                                      );
+                                    }
+                                }
+                                return const SizedBox();
+                              }),
+                        )
+                      ],
+                    ),
+                    Text(p.bookings[i].court.type),
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_today, color: secondaryColor),
+                        const SizedBox(width: 10),
+                        Text(DateFormat('dd/MM/yyyy')
+                            .format(p.bookings[i].date)),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('Reservado por:'),
+                        const SizedBox(width: 5),
+                        const CircleAvatar(
+                          radius: 15,
+                          backgroundImage: AssetImage(
+                            'assets/images/profile.jpg',
                           ),
-                          const SizedBox(width: 5),
-                          Text(p.bookings[i].userName),
-                        ],
-                      ),
-                      Row(
+                        ),
+                        const SizedBox(width: 5),
+                        Text(p.bookings[i].userName),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Row(
                         children: [
                           const Icon(Icons.lock_clock, color: secondaryColor),
                           const SizedBox(width: 10),
@@ -144,8 +173,8 @@ class MyReserves extends StatelessWidget {
                               '${p.calculateTotalCost(p.bookings[i].startTime, p.bookings[i].endTime, p.bookings[i].court.price)}\$')
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             )

@@ -21,6 +21,8 @@ class ReserveCourtProvider extends ChangeNotifier {
   DateTime? initHour;
   DateTime? endHour;
 
+  bool isDateAvailable = true;
+
   TextEditingController commentsCtrl = TextEditingController();
 
   String formatDuration(DateTime startTime, DateTime endTime) {
@@ -29,6 +31,25 @@ class ReserveCourtProvider extends ChangeNotifier {
 
     String formattedDuration = totalHours.toString().padLeft(1, '0');
     return "${formattedDuration}H";
+  }
+
+//VERIFY IF THE COURT IS AVAILABLE
+  bool isCourtAvailable(DateTime desiredDate, DateTime startTime,
+      DateTime endTime, String courtId) {
+    for (Booking booking in bookings) {
+      if (booking.courtId == courtId && booking.date == desiredDate) {
+        if ((startTime.isAfter(booking.startTime) &&
+                startTime.isBefore(booking.endTime)) ||
+            (endTime.isAfter(booking.startTime) &&
+                endTime.isBefore(booking.endTime)) ||
+            (startTime.isAtSameMomentAs(booking.startTime) ||
+                endTime.isAtSameMomentAs(booking.endTime))) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
 //SHARED PREFERENCES
@@ -139,7 +160,7 @@ class ReserveCourtProvider extends ChangeNotifier {
     return count < 3;
   }
 
-  void selectDate(BuildContext context) {
+  void selectDate(BuildContext context, String courtId) {
     showCupertinoModalPopup(
         context: context,
         builder: (context) {
@@ -153,6 +174,8 @@ class ReserveCourtProvider extends ChangeNotifier {
                       child: CupertinoDatePicker(
                         initialDateTime: DateTime.now(),
                         onDateTimeChanged: (value) {
+                          isDateAvailable = isCourtAvailable(
+                              value, initHour!, endHour!, courtId);
                           date = value;
                           notifyListeners();
                         },

@@ -271,19 +271,19 @@ class ConfirmReserveCourt extends StatelessWidget {
                     color: secondaryColor, fontSize: fontSize - 2),
               ),
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Disponible',
+                const Text(
+                  'Hora de reserva:',
                   style: TextStyle(
                       color: secondaryColor,
                       fontSize: fontSize,
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '4 a 6PM',
-                  style: TextStyle(
+                  '${DateFormat('HH:MM a').format(booking.startTime)} - ${DateFormat('HH:MM a').format(booking.endTime)}',
+                  style: const TextStyle(
                       color: primaryColor,
                       fontSize: fontSize,
                       fontWeight: FontWeight.bold),
