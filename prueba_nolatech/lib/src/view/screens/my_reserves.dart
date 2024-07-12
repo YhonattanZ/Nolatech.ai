@@ -139,7 +139,7 @@ class MyReserves extends StatelessWidget {
                           const SizedBox(width: 10),
                           Text(p.formatDuration(
                               p.bookings[i].startTime, p.bookings[i].endTime)),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
                               '${p.calculateTotalCost(p.bookings[i].startTime, p.bookings[i].endTime, p.bookings[i].court.price)}\$')
                         ],

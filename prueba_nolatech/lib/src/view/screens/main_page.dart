@@ -92,7 +92,7 @@ class MainPage extends StatelessWidget {
                   itemCount: p.bookings.length,
                   itemBuilder: (ctx, i) => Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
-                        child: reservedBooking(p, i),
+                        child: reservedBooking(p, i, context),
                       )),
             ),
           ],
@@ -101,10 +101,9 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Widget reservedBooking(ReserveCourtProvider p, int i) {
+  Widget reservedBooking(ReserveCourtProvider p, int i, context) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        height: 150,
         width: double.infinity,
         decoration: BoxDecoration(
             color: Colors.white,
@@ -168,11 +167,38 @@ class MainPage extends StatelessWidget {
                         children: [
                           const Icon(Icons.lock_clock, color: secondaryColor),
                           const SizedBox(width: 10),
-                          Text('2H'),
-                          SizedBox(width: 10),
-                          Text('${p.bookings[i].court.price.toInt()}\$')
+                          Text(p.formatDuration(
+                              p.bookings[i].startTime, p.bookings[i].endTime)),
+                          const SizedBox(width: 10),
+                          Text(
+                              '${p.calculateTotalCost(p.bookings[i].startTime, p.bookings[i].endTime, p.bookings[i].court.price)}\$')
                         ],
                       ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 10),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  backgroundColor: Colors.red),
+                              onPressed: () {
+                                p.showConfirmationDialog(
+                                    context,
+                                    'Eliminar agendamiento',
+                                    '¿Estás seguro de que quieres realizar esta acción?',
+                                    p.bookings[i]);
+                              },
+                              child: const Text(
+                                'Borrar',
+                                style: TextStyle(
+                                    fontSize: fontSize, color: Colors.white),
+                              )),
+                        ),
+                      )
                     ],
                   ),
                 ),

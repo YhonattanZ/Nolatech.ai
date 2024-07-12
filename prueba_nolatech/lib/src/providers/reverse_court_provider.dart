@@ -6,9 +6,8 @@ import 'package:prueba_nolatech/src/view/screens/my_reserves.dart';
 
 import 'package:timezone/timezone.dart' as tz;
 import '../models/booking.dart';
-import '../models/courts_model.dart';
 
-//TODO: AGREGAR CLIMA, AGREGAR CALCULADORA DE HORA DE PRECIOS, AGREGAR BOTON DE BORRAR EN MAIN PAGE
+//TODO: AGREGAR CLIMA, AGREGAR BOTON DE BORRAR EN MAIN PAGE
 class ReserveCourtProvider extends ChangeNotifier {
   Booking? booking;
   List<Booking> bookings = [];
@@ -34,6 +33,37 @@ class ReserveCourtProvider extends ChangeNotifier {
     Duration duration = endTime.difference(startTime);
     int totalHours = duration.inHours;
     return totalHours * pricePerHour;
+  }
+
+  void showConfirmationDialog(
+      BuildContext context, String title, String message, Booking booking) {
+    // Muestra el AlertDialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            // Botón "No"
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            // Botón "Sí"
+            TextButton(
+              child: Text('Sí'),
+              onPressed: () {
+                deleteCourt(booking);
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void deleteCourt(Booking booking) {
