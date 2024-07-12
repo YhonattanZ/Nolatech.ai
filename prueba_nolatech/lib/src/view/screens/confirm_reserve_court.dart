@@ -107,6 +107,14 @@ class ConfirmReserveCourt extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                     ),
                     onPressed: () {
+                      var b = Booking(
+                          startTime: booking.startTime,
+                          endTime: booking.endTime,
+                          instructor: booking.instructor,
+                          courtId: booking.courtId,
+                          date: booking.date,
+                          userName: booking.userName,
+                          court: booking.court);
                       p
                           .addEventIfSlotAvailable(
                               p.initHour!,
@@ -115,15 +123,9 @@ class ConfirmReserveCourt extends StatelessWidget {
                               '${booking.court.name} ${booking.court.type}',
                               p.commentsCtrl.text)
                           .then((e) {
-                        p.addBooking(Booking(
-                            startTime: booking.startTime,
-                            endTime: booking.endTime,
-                            instructor: booking.instructor,
-                            courtId: booking.courtId,
-                            date: booking.date,
-                            userName: booking.userName,
-                            court: booking.court));
+                        p.addBooking(b);
                         p.goToMyReserves(context);
+                        p.saveBooking(b);
                       });
                     },
                     child: const Text('Pagar',

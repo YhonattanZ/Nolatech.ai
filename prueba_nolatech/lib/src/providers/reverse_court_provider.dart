@@ -1,13 +1,16 @@
+import 'dart:convert';
+
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:prueba_nolatech/src/view/screens/confirm_reserve_court.dart';
 import 'package:prueba_nolatech/src/view/screens/my_reserves.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:timezone/timezone.dart' as tz;
 import '../models/booking.dart';
 
-//TODO: AGREGAR CLIMA, AGREGAR BOTON DE BORRAR EN MAIN PAGE
+//TODO: AGREGAR CLIMA
 class ReserveCourtProvider extends ChangeNotifier {
   Booking? booking;
   List<Booking> bookings = [];
@@ -26,6 +29,40 @@ class ReserveCourtProvider extends ChangeNotifier {
 
     String formattedDuration = totalHours.toString().padLeft(1, '0');
     return "${formattedDuration}H";
+  }
+
+//SHARED PREFERENCES
+  void saveBooking(Booking b) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String key = 'reservedBooking${b.date}';
+    List<Booking> bookingToday = await loadBooking(b.date.toString());
+
+    if (bookingToday.length < 3) {
+      bookingToday.add(b);
+
+      String bookingJson =
+          jsonEncode(bookingToday.map((b) => b.toJson()).toList());
+
+      await prefs.setString(key, bookingJson);
+    } else {
+      print(
+          'No se puede reservar más de 3 canchas para la fecha seleccionada.');
+    }
+  }
+
+//De ser necesario, esta la opcion para cargar los agendamientos ya que en los requisitos no se solicita esa funcionalidad
+  Future<List<Booking>> loadBooking(String bookingDate) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String key = 'reservedBooking$bookingDate';
+
+    String? bookingJson = prefs.getString(key);
+    if (bookingJson != null) {
+      List<dynamic> bookingList = jsonDecode(bookingJson);
+      return bookingList.map((bk) => Booking.fromJson(bk)).toList();
+    } else {
+      return [];
+    }
   }
 
   double calculateTotalCost(
