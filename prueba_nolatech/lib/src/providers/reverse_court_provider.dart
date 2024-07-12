@@ -1,9 +1,11 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:prueba_nolatech/src/view/screens/my_reserves.dart';
 
 import 'package:timezone/timezone.dart' as tz;
 import '../models/courts_model.dart';
 
+//TODO: AGREGAR CLIMA, AGREGAR CALCULADORA DE HORA DE PRECIOS
 class ReserveCourtProvider extends ChangeNotifier {
   List<Court> reservedCourts = [];
   String? idCalendar;
@@ -18,6 +20,11 @@ class ReserveCourtProvider extends ChangeNotifier {
 
   void deleteCourt(Court court) {
     reservedCourts.remove(court);
+  }
+
+  void goToMyReserves(context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const MyReserves()));
   }
 
   DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();

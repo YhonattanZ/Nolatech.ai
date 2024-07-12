@@ -4,10 +4,14 @@ class Court {
   final String type;
 
   final double price;
+  DateTime? startDate;
+  DateTime? endDate;
 
-  const Court(
+  Court(
       {required this.image,
       required this.name,
       required this.type,
-      required this.price});
+      required this.price,
+      this.startDate,
+      this.endDate});
 }

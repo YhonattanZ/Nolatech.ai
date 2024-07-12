@@ -114,6 +114,7 @@ class ReserveCourt extends StatelessWidget {
                               provider.commentsCtrl.text)
                           .then((e) {
                         p.addCourt(courts);
+                        p.goToMyReserves(context);
                       });
                     },
                     child: const Text('Pagar',
@@ -198,7 +199,7 @@ class ReserveCourt extends StatelessWidget {
         Icon(icon, color: secondaryColor),
         Text(
           title,
-          style: TextStyle(fontSize: fontSize - 2),
+          style: const TextStyle(fontSize: fontSize - 2),
         ),
       ],
     );
